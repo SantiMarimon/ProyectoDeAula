@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responder Petición - PQRS Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/petitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="dashboard-admin.html" class="navbar-brand"><span>📋</span><div class="brand-info">PQRS Admin — JAC Policarpa<small class="brand-sub">JAC Barrio Policarpa</small></div></a>
+            <ul class="navbar-menu">
+                <li><a href="dashboard-admin.html">Dashboard</a></li>
+                <li><a href="peticiones-admin.html" class="active">Peticiones</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleUserDropdown()">
+                        <span id="userInitial">A</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout with-sidebar">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="dashboard-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-chart-line"></i><span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="peticiones-admin.html" class="sidebar-menu-link active">
+                        <i class="fas fa-inbox"></i><span>Peticiones</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="gestion-usuarios-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-users"></i><span>Gestión de Usuarios</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="configuracion-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-sliders-h"></i><span>Configuración</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Gestionar Solicitud</h1>
+                    <p class="page-subtitle" id="subtitulo">Cargando...</p>
+                </div>
+                <button class="btn btn-secondary" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+            </div>
+
+            <div id="alertBox" style="display:none;"></div>
+
+            <div class="grid grid-3" style="gap:30px;">
+                <!-- Panel izquierdo: info petición -->
+                <div style="grid-column:1 / 2;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 style="margin:0;">Información de la Petición</h4>
+                        </div>
+                        <div class="card-body">
+                            <div style="margin-bottom:16px;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">ID</div>
+                                <div style="font-weight:700; color:var(--primary);" id="campoId">--</div>
+                            </div>
+                            <div style="margin-bottom:16px;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Tipo</div>
+                                <div style="font-weight:600;" id="campoTipo">--</div>
+                            </div>
+                            <div style="margin-bottom:16px;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Asunto</div>
+                                <div style="font-weight:600; color:var(--gray-800);" id="campoAsunto">--</div>
+                            </div>
+                            <div style="margin-bottom:16px;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Estado Actual</div>
+                                <div id="campoEstado">--</div>
+                            </div>
+                            <div style="margin-bottom:16px;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Fecha</div>
+                                <div style="font-weight:600;" id="campoFecha">--</div>
+                            </div>
+                            <div id="campoAreaDiv" style="margin-bottom:16px; display:none;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Área</div>
+                                <div style="font-weight:600;" id="campoArea">--</div>
+                            </div>
+                            <div id="campoUbicacionDiv" style="margin-bottom:16px; display:none;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Ubicación</div>
+                                <div id="campoUbicacion">--</div>
+                            </div>
+                            <div id="campoFechaHechoDiv" style="margin-bottom:16px; display:none;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Fecha del Hecho</div>
+                                <div id="campoFechaHecho">--</div>
+                            </div>
+                            <div id="campoPersonaDiv" style="margin-bottom:16px; display:none;">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:4px;">Persona Involucrada</div>
+                                <div id="campoPersona">--</div>
+                            </div>
+                            <div id="campoContactoDiv" style="margin-bottom:16px; display:none; padding-top:12px; border-top:1px solid var(--gray-200);">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:8px;">Contacto</div>
+                                <div id="campoContactoNombre" style="font-size:0.875rem;"></div>
+                                <div id="campoContactoEmail" style="font-size:0.875rem; color:var(--gray-600);"></div>
+                                <div id="campoContactoTelefono" style="font-size:0.875rem; color:var(--gray-600);"></div>
+                            </div>
+                            <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--gray-200);">
+                                <div style="color:var(--gray-500); font-size:0.8rem; text-transform:uppercase; font-weight:600; margin-bottom:6px;">Solicitante</div>
+                                <div style="font-weight:600; color:var(--gray-900);" id="campoSolicitante">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top:20px;">
+                        <div class="card-header"><h4 style="margin:0;">Descripción</h4></div>
+                        <div class="card-body">
+                            <p style="margin:0; color:var(--gray-700); font-size:0.9rem; line-height:1.6; max-height:180px; overflow-y:auto;" id="campoDescripcion">--</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Panel derecho: formulario respuesta -->
+                <div style="grid-column:2 / 4;">
+                    <!-- Evidencias del ciudadano -->
+                    <div id="evidenciasCard" class="card" style="display:none; margin-bottom:20px;">
+                        <div class="card-header">
+                            <h3 style="margin:0;"><i class="fas fa-paperclip"></i> Evidencias del Ciudadano</h3>
+                        </div>
+                        <div class="card-body" id="evidenciasContenido">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 style="margin:0;">Proporcionar Respuesta</h3>
+                        </div>
+                        <form id="responseForm">
+                            <div class="card-body">
+
+                                <div class="form-section">
+                                    <h4 class="form-section-title" style="border-bottom-color:var(--success);">
+                                        <i class="fas fa-edit"></i> Respuesta al ciudadano
+                                    </h4>
+                                    <div class="form-group form-row full">
+                                        <label for="respuesta">Respuesta Oficial de la JAC</label>
+                                        <textarea id="respuesta" placeholder="Redacta la respuesta oficial de la JAC al ciudadano..." required style="min-height:160px;"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h4 class="form-section-title" style="border-bottom-color:var(--success);">
+                                        <i class="fas fa-cogs"></i> Configuración
+                                    </h4>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="nuevoEstado">Actualizar Estado</label>
+                                            <select id="nuevoEstado" required>
+                                                <option value="">Selecciona el estado</option>
+                                                <option value="PENDIENTE">Pendiente</option>
+                                                <option value="ASIGNADA">Asignada</option>
+                                                <option value="RESUELTA">Resuelta</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="responsable">Funcionario Responsable</label>
+                                            <select id="responsable">
+                                                <option value="">Sin asignar</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="resolutionDate">Fecha Estimada de Resolución</label>
+                                            <input type="date" id="resolutionDate">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-row full">
+                                        <label for="observacion">Observación Interna</label>
+                                        <textarea id="observacion" placeholder="Nota interna para el equipo de la JAC (no visible al ciudadano)" style="min-height:80px;"></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                                <!-- Agregar evidencia adicional -->
+                                <div class="form-section">
+                                    <h3 class="form-section-title">
+                                        <i class="fas fa-paperclip"></i> Adjuntar Archivos de la JAC
+                                    </h3>
+                                    <div class="form-group">
+                                        <div class="file-upload" id="fileUpload">
+                                            <i class="fas fa-cloud-upload-alt" style="font-size:1.5rem; color:var(--primary); margin-bottom:8px;"></i>
+                                            <p style="margin:0; font-weight:600; color:var(--gray-700);">Arrastra archivos o haz clic para seleccionar</p>
+                                            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--gray-500);">JPG, PNG, PDF — máximo 10MB</p>
+                                        </div>
+                                        <div class="file-list" id="fileList"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div class="flex-between">
+                                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
+                                    <button type="button" onclick="enviarRespuesta()" class="btn btn-primary" id="btnEnviar">
+                                        <i class="fas fa-paper-plane"></i> Enviar Respuesta Oficial
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" style="display:none;" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp">
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/responder-peticion.js"></script>
+</body>
+</html>

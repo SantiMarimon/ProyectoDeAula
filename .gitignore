@@ -1,0 +1,35 @@
+# Java / Maven
+target/
+*.jar
+*.war
+*.class
+*.log
+*.iml
+mvnw.cmd.bak
+
+# Spring Boot
+*.pid
+
+# Entorno / secretos
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# IDEs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore

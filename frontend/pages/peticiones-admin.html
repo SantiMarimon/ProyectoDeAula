@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Peticiones - PQRS Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/petitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="dashboard-admin.html" class="navbar-brand"><span>📋</span><div class="brand-info">PQRS Admin — JAC Policarpa<small class="brand-sub">JAC Barrio Policarpa</small></div></a>
+            <ul class="navbar-menu">
+                <li><a href="dashboard-admin.html">Dashboard</a></li>
+                <li><a href="#" class="active">Peticiones</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleUserDropdown()">
+                        <span id="userInitial">A</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout with-sidebar">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="dashboard-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-chart-line"></i><span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="peticiones-admin.html" class="sidebar-menu-link active">
+                        <i class="fas fa-inbox"></i><span>Peticiones</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="gestion-usuarios-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-users"></i><span>Gestión de Usuarios</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="configuracion-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-sliders-h"></i><span>Configuración</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Gestión de PQRS</h1>
+                    <p class="page-subtitle">Administra todas las solicitudes del Barrio Policarpa</p>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-group" style="flex:1;">
+                    <label>Buscar</label>
+                    <div class="search-input-group">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por solicitante o asunto...">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Área</label>
+                    <select id="areaFilter">
+                        <option value="">Todas las áreas</option>
+                        <option value="INFRAESTRUCTURA">Infraestructura y Obras</option>
+                        <option value="SALUD">Salud</option>
+                        <option value="EDUCACION">Educación</option>
+                        <option value="SERVICIOS">Servicios Públicos</option>
+                        <option value="SEGURIDAD">Seguridad y Convivencia</option>
+                        <option value="OTRO">Otro</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Estado</label>
+                    <select id="statusFilter">
+                        <option value="">Todos</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="ASIGNADA">Asignada</option>
+                        <option value="RESUELTA">Resuelta</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Tipo</label>
+                    <select id="typeFilter">
+                        <option value="">Todos</option>
+                        <option value="PETICION">Petición</option>
+                        <option value="QUEJA">Queja</option>
+                        <option value="RECLAMO">Reclamo</option>
+                        <option value="SUGERENCIA">Sugerencia</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="filter-reset" onclick="limpiarFiltros()">
+                        <i class="fas fa-redo"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+
+            <div id="alertBox" style="display:none;"></div>
+
+            <div class="card">
+                <div class="card-body" style="padding:0; overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="padding:15px 20px; width:90px;">ID</th>
+                                <th style="padding:15px 20px;">Asunto</th>
+                                <th style="padding:15px 20px; width:110px;">Tipo</th>
+                                <th style="padding:15px 20px; width:160px;">Solicitante</th>
+                                <th style="padding:15px 20px; width:120px;">Estado</th>
+                                <th style="padding:15px 20px; width:120px;">Fecha</th>
+                                <th style="padding:15px 20px; width:130px;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaCuerpo">
+                            <tr><td colspan="7" style="padding:30px; text-align:center; color:var(--gray-500);">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                    <div id="paginacion"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/peticiones-admin.js"></script>
+</body>
+</html>

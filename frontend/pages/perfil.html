@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - PQRS</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/petitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-tab { flex: 0 0 auto; border: none; background: none; padding: 15px 20px; font-weight: 600; color: var(--gray-500); border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s ease; margin-bottom: -2px; }
+        .auth-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .auth-tab-content { display: none; }
+        .auth-tab-content.active { display: block; }
+        .form-checkbox { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        .form-checkbox input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+        .form-checkbox label { margin-bottom: 0; font-weight: 400; color: var(--gray-600); cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a id="navInicio" href="dashboard-ciudadano.html" class="navbar-brand"><span>📋</span><div class="brand-info">PQRS JAC Policarpa<small class="brand-sub">JAC Barrio Policarpa</small></div></a>
+            <ul class="navbar-menu">
+                <li><a id="navLink" href="dashboard-ciudadano.html">Inicio</a></li>
+                <li><a href="#" class="active">Mi Perfil</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleUserDropdown()">
+                        <span id="userInitial">U</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Mi Perfil</h1>
+                    <p class="page-subtitle">Gestiona tu información como miembro de la comunidad</p>
+                </div>
+            </div>
+
+            <div id="alertBox" style="display:none;"></div>
+
+            <div class="grid grid-3" style="gap:30px;">
+                <!-- Columna izquierda: resumen -->
+                <div class="card">
+                    <div class="card-body" style="text-align:center;">
+                        <div id="avatarGrande" style="width:120px; height:120px; margin:0 auto 20px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:700; overflow:hidden;">
+                            U
+                        </div>
+                        <h3 id="nombreCompleto" style="margin:10px 0;">--</h3>
+                        <p id="rolLabel" style="color:var(--gray-500); margin-bottom:20px;">--</p>
+                        <p id="correoLabel" style="color:var(--gray-600); font-size:0.9rem;">--</p>
+
+                        <div style="border-top:1px solid var(--gray-200); padding-top:20px; margin-top:20px;">
+                            <div style="display:flex; justify-content:space-around; margin-bottom:15px;">
+                                <div>
+                                    <div style="font-size:1.75rem; font-weight:700; color:var(--primary);" id="statTotal">-</div>
+                                    <div style="color:var(--gray-500); font-size:0.875rem;">Peticiones</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:1.75rem; font-weight:700; color:var(--success);" id="statResueltas">-</div>
+                                    <div style="color:var(--gray-500); font-size:0.875rem;">Resueltas</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:1.75rem; font-weight:700; color:var(--warning);" id="statPendientes">-</div>
+                                    <div style="color:var(--gray-500); font-size:0.875rem;">Pendientes</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="file" id="fotoInput" accept="image/*" style="display:none;">
+                        <button type="button" class="btn btn-primary btn-block" style="margin-top:20px;" onclick="document.getElementById('fotoInput').click()">
+                            <i class="fas fa-camera"></i> Cambiar Foto
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Columna derecha: tabs de edición -->
+                <div style="grid-column:2 / 4;">
+                    <div style="display:flex; gap:0; border-bottom:2px solid var(--gray-200); margin-bottom:30px;">
+                        <button class="auth-tab active" onclick="switchTab('personal', this)">
+                            <i class="fas fa-user"></i> Información Personal
+                        </button>
+                        <button class="auth-tab" onclick="switchTab('security', this)">
+                            <i class="fas fa-lock"></i> Seguridad
+                        </button>
+                    </div>
+
+                    <!-- TAB: Personal -->
+                    <div id="personal" class="auth-tab-content active">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 style="margin:0;">Información Personal</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="personalForm">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="firstName">Nombre *</label>
+                                            <input type="text" id="firstName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastName">Apellido *</label>
+                                            <input type="text" id="lastName" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="email">Correo *</label>
+                                            <input type="email" id="email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone">Teléfono</label>
+                                            <input type="tel" id="phone">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Dirección</label>
+                                        <input type="text" id="address">
+                                    </div>
+                                    <div style="display:flex; gap:15px; margin-top:30px;">
+                                        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Guardar Cambios
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: Seguridad -->
+                    <div id="security" class="auth-tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 style="margin:0;">Seguridad</h3>
+                            </div>
+                            <div class="card-body">
+                                <h4 style="margin-bottom:15px;">Cambiar Contraseña</h4>
+                                <form id="passwordForm">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="newPassword">Nueva Contraseña *</label>
+                                            <input type="password" id="newPassword" placeholder="Mínimo 8 caracteres" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirmNewPassword">Confirmar Contraseña *</label>
+                                            <input type="password" id="confirmNewPassword" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-key"></i> Actualizar Contraseña
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Notificación de Mudanza -->
+            <div id="zonaMudanza" class="card" style="margin-top:40px; border-left:4px solid var(--warning); display:none;">
+                <div class="card-header" style="background-color:rgba(255,193,7,0.1); border-bottom:1px solid var(--warning);">
+                    <h3 style="margin:0; color:var(--warning);">
+                        <i class="fas fa-truck-moving"></i> Notificación de Mudanza
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;">
+                        <div>
+                            <h4 style="margin-bottom:8px;">¿Se va a mudar o ya se mudó del barrio Policarpa?</h4>
+                            <p style="color:var(--gray-600); margin:0; line-height:1.6;">
+                                Si usted se ha mudado o tiene previsto mudarse del barrio, le informamos que su cuenta
+                                en el sistema PQRS de la JAC del Barrio Policarpa será revisada por un administrador,
+                                quien podrá proceder con la suspensión o eliminación de la misma conforme a la normativa
+                                de la comunidad.
+                            </p>
+                        </div>
+                        <div style="flex-shrink:0;">
+                            <button type="button" id="btnMudanza" class="btn btn-warning" onclick="notificarMudanza()" style="white-space:nowrap;">
+                                <i class="fas fa-truck-moving"></i> Notificar Mudanza
+                            </button>
+                        </div>
+                    </div>
+                    <div id="alertMudanza" style="display:none; margin-top:15px;"></div>
+                </div>
+            </div>
+
+            <!-- Zona de Peligro -->
+            <div id="zonaPeligro" class="card" style="margin-top:40px; border-left:4px solid var(--danger);">
+                <div class="card-header" style="background-color:var(--danger-light); border-bottom:1px solid var(--danger);">
+                    <h3 style="margin:0; color:var(--danger);">
+                        <i class="fas fa-exclamation-triangle"></i> Zona de Peligro
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h4 style="margin-bottom:5px;">Eliminar Cuenta</h4>
+                            <p style="color:var(--gray-600); margin:0;">Esta acción es permanente y no se puede deshacer.</p>
+                        </div>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar Cuenta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/perfil.js"></script>
+    <script>
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.auth-tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.auth-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            (btn || event.target.closest('.auth-tab')).classList.add('active');
+        }
+
+        function cancelEdit() {
+            if (confirm('¿Descartar cambios?')) location.reload();
+        }
+
+        function toggleUserDropdown() {
+            document.querySelector('.user-dropdown').classList.toggle('active');
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '../pages/index.html';
+        }
+
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            if (userMenu && !userMenu.contains(event.target)) {
+                document.querySelector('.user-dropdown').classList.remove('active');
+            }
+        });
+
+    </script>
+</body>
+</html>

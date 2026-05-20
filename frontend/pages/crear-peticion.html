@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Petición - PQRS</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/petitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="dashboard-ciudadano.html" class="navbar-brand">
+                <span>📋</span><div class="brand-info">PQRS JAC Policarpa<small class="brand-sub">JAC Barrio Policarpa</small></div>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="dashboard-ciudadano.html">Inicio</a></li>
+                <li><a href="#" class="active">Nueva Petición</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleUserDropdown()">
+                        <span id="userInitial">R</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="window.location.href='perfil.html'">
+                            <i class="fas fa-user"></i> Mi Perfil
+                        </div>
+                        <div class="user-dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Nueva Solicitud PQRS</h1>
+                    <p class="page-subtitle">Completa el formulario para presentar tu solicitud ante la Junta de Acción Comunal del Barrio Policarpa</p>
+                </div>
+            </div>
+
+            <div id="alertBox" style="display:none;"></div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form id="petitionForm">
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <i class="fas fa-info-circle"></i> Información General
+                            </h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="petitionType">Tipo de Petición *</label>
+                                    <select id="petitionType" required>
+                                        <option value="">Selecciona el tipo de solicitud</option>
+                                        <option value="PETICION">Petición</option>
+                                        <option value="QUEJA">Queja</option>
+                                        <option value="RECLAMO">Reclamo</option>
+                                        <option value="SUGERENCIA">Sugerencia</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="subject">Asunto *</label>
+                                    <input type="text" id="subject" placeholder="Describe brevemente el motivo de tu solicitud" required>
+                                </div>
+                            </div>
+                            <div class="form-group form-row full">
+                                <label for="description">Descripción Detallada *</label>
+                                <textarea id="description" placeholder="Explica detalladamente tu situación. Incluye fechas, lugares y toda la información relevante para que la JAC pueda gestionar tu solicitud correctamente." required style="min-height: 160px;"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="department">Área o Dependencia</label>
+                                    <select id="department">
+                                        <option value="">Selecciona el área</option>
+                                        <option value="INFRAESTRUCTURA">Infraestructura y Obras</option>
+                                        <option value="SALUD">Salud</option>
+                                        <option value="EDUCACION">Educación</option>
+                                        <option value="SERVICIOS">Servicios Públicos</option>
+                                        <option value="SEGURIDAD">Seguridad y Convivencia</option>
+                                        <option value="OTRO">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <i class="fas fa-map-marker-alt"></i> Ubicación y Detalles
+                            </h3>
+                            <div class="form-group form-row full">
+                                <label for="location">Ubicación del Problema</label>
+                                <input type="text" id="location" placeholder="Ej: Calle 30 con Carrera 15, frente al parque">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="incidentDate">Fecha del Hecho</label>
+                                    <input type="date" id="incidentDate">
+                                </div>
+                                <div class="form-group">
+                                    <label for="personInvolved">Persona o Servidor Público Involucrado</label>
+                                    <input type="text" id="personInvolved" placeholder="Nombre (opcional)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <i class="fas fa-phone"></i> Información de Contacto
+                            </h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contactName">Nombre Completo</label>
+                                    <input type="text" id="contactName" placeholder="Tu nombre completo">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactEmail">Email</label>
+                                    <input type="email" id="contactEmail" placeholder="tu@correo.com">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactPhone">Teléfono</label>
+                                <input type="tel" id="contactPhone" placeholder="+57 300 000 0000">
+                            </div>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <div>
+                                    <strong>Importante:</strong> Al enviar esta petición, aceptas que la información será utilizada únicamente para procesar tu solicitud. Toda la información es confidencial y protegida por ley.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Evidencias -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">
+                                <i class="fas fa-paperclip"></i> Archivos Adjuntos (Opcional)
+                            </h3>
+                            <div class="form-group">
+                                <div class="file-upload" id="fileUpload">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size:2rem; color:var(--primary); margin-bottom:10px;"></i>
+                                    <p style="margin:0; font-weight:600; color:var(--gray-700);">Arrastra tus fotos o documentos aquí, o haz click para seleccionar</p>
+                                    <p style="margin:4px 0 0; font-size:0.85rem; color:var(--gray-500);">Imágenes y PDF · Máximo 10MB por archivo</p>
+                                </div>
+                                <div class="file-list" id="fileList"></div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="card-footer">
+                    <div class="flex-between">
+                        <button class="btn btn-secondary" onclick="cancelar()">
+                            <i class="fas fa-arrow-left"></i> Cancelar
+                        </button>
+                        <button class="btn btn-primary" id="btnEnviar" type="button" onclick="enviarPeticion()">
+                            <i class="fas fa-paper-plane"></i> Enviar Solicitud
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" style="display:none;" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp">
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/crear-peticion.js"></script>
+</body>
+</html>

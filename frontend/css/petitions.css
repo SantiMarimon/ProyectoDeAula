@@ -1,0 +1,515 @@
+/* ========================================
+   PQRS SYSTEM - PETITIONS & CARDS STYLES
+   ======================================== */
+
+/* Petition Card */
+.petition-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--primary);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.petition-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.petition-card.estado-resuelto {
+  border-left-color: var(--success);
+}
+
+.petition-card.estado-rechazado {
+  border-left-color: var(--danger);
+}
+
+.petition-card.estado-en-proceso {
+  border-left-color: var(--warning);
+}
+
+.petition-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.petition-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-sm);
+}
+
+.petition-id {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.petition-content {
+  padding: var(--spacing-lg);
+}
+
+.petition-description {
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.petition-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.petition-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.petition-meta-label {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.petition-meta-value {
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.petition-footer {
+  padding: var(--spacing-lg);
+  background-color: var(--gray-50);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--gray-100);
+}
+
+.petition-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.petition-status-timeline {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  position: relative;
+}
+
+.timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  position: relative;
+  flex: 1;
+}
+
+.timeline-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--gray-300);
+}
+
+.timeline-step.active:not(:last-child)::after {
+  background: var(--success);
+}
+
+.timeline-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--gray-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.timeline-step.active .timeline-dot {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+  font-weight: 700;
+}
+
+.timeline-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--gray-600);
+}
+
+.timeline-step.active .timeline-label {
+  color: var(--gray-900);
+  font-weight: 600;
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.form-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--primary);
+  color: var(--gray-900);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.form-row.full {
+  grid-template-columns: 1fr;
+}
+
+/* File Upload */
+.file-upload {
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--gray-50);
+}
+
+.file-upload:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.file-upload.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.file-upload-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
+}
+
+.file-upload-text {
+  color: var(--gray-700);
+  font-weight: 500;
+}
+
+.file-upload-hint {
+  color: var(--gray-500);
+  font-size: 0.875rem;
+  margin-top: var(--spacing-sm);
+}
+
+.file-list {
+  margin-top: var(--spacing-lg);
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.file-item-name {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 1;
+}
+
+.file-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius);
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.file-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.file-item-filename {
+  font-weight: 500;
+  color: var(--gray-900);
+}
+
+.file-item-size {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.file-item-remove {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.file-item-remove:hover {
+  color: #7f1d1d;
+}
+
+/* Response Card */
+.response-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--success);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: var(--spacing-lg);
+}
+
+.response-header {
+  padding: var(--spacing-lg);
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-100);
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.response-author {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.response-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.response-author-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.response-author-name {
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.response-author-role {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.response-date {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.response-body {
+  padding: var(--spacing-lg);
+  line-height: 1.8;
+  color: var(--gray-700);
+  background: white;
+}
+
+.response-attachments {
+  padding: var(--spacing-lg);
+  border-top: 1px solid var(--gray-100);
+  background: var(--gray-50);
+}
+
+.response-attachments-title {
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  color: var(--gray-900);
+}
+
+.attachment-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.attachment-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.attachment-item:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
+}
+
+.attachment-icon {
+  font-size: 1.75rem;
+}
+
+.attachment-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-900);
+  word-break: break-word;
+}
+
+/* Filter Bar */
+.filter-bar {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: var(--gray-900);
+  font-size: 0.875rem;
+}
+
+.filter-group input,
+.filter-group select {
+  min-width: 200px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.filter-reset {
+  background: none;
+  border: 1px solid var(--gray-300);
+  color: var(--gray-600);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.filter-reset:hover {
+  border-color: var(--gray-400);
+  color: var(--gray-900);
+}
+
+/* Search Input */
+.search-input-group {
+  position: relative;
+  flex: 1;
+  min-width: 300px;
+}
+
+.search-input-group input {
+  width: 100%;
+  padding-left: 40px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .petition-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .petition-status-timeline {
+    flex-direction: column;
+  }
+
+  .timeline-step:not(:last-child)::after {
+    left: 20px;
+    width: 2px;
+    height: 100%;
+    top: 40px;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    min-width: 100%;
+  }
+
+  .search-input-group {
+    min-width: 100%;
+  }
+
+  .attachment-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

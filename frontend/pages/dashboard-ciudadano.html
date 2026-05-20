@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PQRS</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/petitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="navbar-brand"><span>📋</span><div class="brand-info">PQRS JAC Policarpa<small class="brand-sub">JAC Barrio Policarpa</small></div></a>
+            <ul class="navbar-menu">
+                <li><a href="#" class="active">Inicio</a></li>
+                <li><a href="crear-peticion.html">Nueva Petición</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <button class="btn btn-primary btn-sm" onclick="window.location.href='crear-peticion.html'">
+                    <i class="fas fa-plus"></i> Nueva Petición
+                </button>
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleUserDropdown()">
+                        <span id="userInitial">R</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="window.location.href='perfil.html'">
+                            <i class="fas fa-user"></i> Mi Perfil
+                        </div>
+                        <div class="user-dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Mis Peticiones</h1>
+                    <p class="page-subtitle" id="saludo">Aquí puedes hacer seguimiento a todas tus solicitudes ante la JAC</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon primary"><i class="fas fa-file-alt"></i></div>
+                    <div class="stat-card-label">MIS PETICIONES</div>
+                    <div class="stat-card-value" id="statTotal">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon success"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-card-label">RESUELTAS</div>
+                    <div class="stat-card-value" id="statResueltas">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon warning"><i class="fas fa-user-check"></i></div>
+                    <div class="stat-card-label">EN GESTIÓN</div>
+                    <div class="stat-card-value" id="statAsignadas">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon danger"><i class="fas fa-clock"></i></div>
+                    <div class="stat-card-label">PENDIENTES</div>
+                    <div class="stat-card-value" id="statPendientes">0</div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-group" style="flex:1;">
+                    <label>Buscar</label>
+                    <div class="search-input-group">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar mis solicitudes...">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Estado</label>
+                    <select id="statusFilter">
+                        <option value="">Todos</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="ASIGNADA">Asignada</option>
+                        <option value="RESUELTA">Resuelta</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Tipo</label>
+                    <select id="typeFilter">
+                        <option value="">Todos</option>
+                        <option value="PETICION">Petición</option>
+                        <option value="QUEJA">Queja</option>
+                        <option value="RECLAMO">Reclamo</option>
+                        <option value="SUGERENCIA">Sugerencia</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="filter-reset" onclick="limpiarFiltros()">
+                        <i class="fas fa-redo"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+
+            <div id="alertBox" style="display:none;"></div>
+            <div id="petitionsList"></div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Petición -->
+    <div id="editModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:12px; padding:30px; width:90%; max-width:600px; max-height:90vh; overflow-y:auto; position:relative;">
+            <button onclick="closeEditModal()" style="position:absolute; top:15px; right:15px; background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--gray-500);">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 style="margin-bottom:20px;">Editar Petición</h3>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editType">Tipo de Petición *</label>
+                    <select id="editType" required>
+                        <option value="PETICION">Petición</option>
+                        <option value="QUEJA">Queja</option>
+                        <option value="RECLAMO">Reclamo</option>
+                        <option value="SUGERENCIA">Sugerencia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editSubject">Asunto *</label>
+                    <input type="text" id="editSubject" placeholder="Resumen breve de tu petición" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">Descripción *</label>
+                    <textarea id="editDescription" placeholder="Descripción detallada" required style="min-height:120px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editLocation">Ubicación del Hecho</label>
+                    <input type="text" id="editLocation" placeholder="Calle, barrio o zona">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editDate">Fecha del Hecho</label>
+                        <input type="date" id="editDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="editPerson">Persona o Servidor Involucrado</label>
+                        <input type="text" id="editPerson" placeholder="Nombre (opcional)">
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-top:20px; justify-content:flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/dashboard-ciudadano.js"></script>
+    <script>
+        function editPetition(id) {
+            document.getElementById('editModal').style.display = 'flex';
+            document.getElementById('editForm').dataset.petitionId = id;
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('editForm').reset();
+        }
+
+        document.getElementById('editForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var id = document.getElementById('editForm').dataset.petitionId;
+            var btn = this.querySelector('[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Guardando...';
+            try {
+                await apiFetch('/api/peticiones/' + id, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        tipoPeticion: document.getElementById('editType').value,
+                        asunto: document.getElementById('editSubject').value.trim(),
+                        descripcion: document.getElementById('editDescription').value.trim(),
+                        ubicacion: document.getElementById('editLocation').value.trim() || null,
+                        fechaHecho: document.getElementById('editDate').value || null,
+                        personaInvolucrada: document.getElementById('editPerson').value.trim() || null
+                    })
+                });
+                closeEditModal();
+                cargarPeticiones();
+            } catch (err) {
+                alert('Error al guardar: ' + err.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+            }
+        });
+    </script>
+</body>
+</html>

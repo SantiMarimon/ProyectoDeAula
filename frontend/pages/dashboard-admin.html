@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - PQRS</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/petitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="navbar-brand"><span>📋</span><div class="brand-info">PQRS Admin — JAC Policarpa<small class="brand-sub">JAC Barrio Policarpa</small></div></a>
+            <ul class="navbar-menu">
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="peticiones-admin.html">Peticiones</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleUserDropdown()">
+                        <span id="userInitial">A</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout with-sidebar">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="dashboard-admin.html" class="sidebar-menu-link active">
+                        <i class="fas fa-chart-line"></i><span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="peticiones-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-inbox"></i><span>Peticiones</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="gestion-usuarios-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-users"></i><span>Gestión de Usuarios</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="configuracion-admin.html" class="sidebar-menu-link">
+                        <i class="fas fa-sliders-h"></i><span>Configuración</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Panel de Administración JAC</h1>
+                    <p class="page-subtitle">Gestiona y supervisa las PQRS del Barrio Policarpa</p>
+                </div>
+            </div>
+
+            <div id="alertBox" style="display:none;"></div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon primary"><i class="fas fa-file-alt"></i></div>
+                    <div class="stat-card-label">TOTAL PETICIONES</div>
+                    <div class="stat-card-value" id="statTotal">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon success"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-card-label">RESUELTAS</div>
+                    <div class="stat-card-value" id="statResueltas">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon warning"><i class="fas fa-user-check"></i></div>
+                    <div class="stat-card-label">EN GESTIÓN</div>
+                    <div class="stat-card-value" id="statAsignadas">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon danger"><i class="fas fa-clock"></i></div>
+                    <div class="stat-card-label">PENDIENTES</div>
+                    <div class="stat-card-value" id="statPendientes">--</div>
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="margin:0;">Por Estado</h3>
+                    </div>
+                    <div class="card-body" id="resumenEstados">
+                        <p style="color:var(--gray-500);">Cargando...</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="margin:0;">Por Tipo</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="position:relative; height:320px;">
+                            <canvas id="graficaTipos"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:30px;">
+                <div class="card-header">
+                    <div class="flex-between">
+                        <h3 style="margin:0;">Solicitudes Recientes</h3>
+                        <a href="peticiones-admin.html" class="btn btn-sm btn-primary">Ver todas</a>
+                    </div>
+                </div>
+                <div class="card-body" style="padding:0; overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="padding:15px 20px;">ID</th>
+                                <th style="padding:15px 20px;">Asunto</th>
+                                <th style="padding:15px 20px;">Tipo</th>
+                                <th style="padding:15px 20px;">Solicitante</th>
+                                <th style="padding:15px 20px;">Estado</th>
+                                <th style="padding:15px 20px;">Fecha</th>
+                                <th style="padding:15px 20px;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaRecientes">
+                            <tr><td colspan="7" style="padding:30px; text-align:center; color:var(--gray-500);">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/dashboard-admin.js"></script>
+</body>
+</html>

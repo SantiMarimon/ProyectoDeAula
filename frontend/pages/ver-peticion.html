@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Petición - PQRS</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/petitions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a id="navBrand" href="dashboard-ciudadano.html" class="navbar-brand"><span>📋</span><div class="brand-info">PQRS JAC Policarpa<small class="brand-sub">JAC Barrio Policarpa</small></div></a>
+            <ul class="navbar-menu">
+                <li><a id="navInicio" href="dashboard-ciudadano.html">Mis Peticiones</a></li>
+                <li><a href="#" class="active">Detalle</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleUserDropdown()">
+                        <span id="userInitial">U</span>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <div class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Detalle de Petición</h1>
+                    <p class="page-subtitle" id="subtitulo">Cargando...</p>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button id="btnEliminar" class="btn btn-danger" style="display:none;" onclick="eliminarPeticion()">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.history.back()">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                </div>
+            </div>
+
+            <div id="alertBox" style="display:none;"></div>
+
+            <div style="margin-bottom:30px;">
+                <div style="display:flex; gap:0; border-bottom:2px solid var(--gray-200);">
+                    <button class="auth-tab active" onclick="switchTab('general', this)" style="flex:0 0 auto; border:none; background:none; padding:15px 20px;">
+                        <i class="fas fa-info-circle"></i> General
+                    </button>
+                    <button class="auth-tab" onclick="switchTab('timeline', this)" style="flex:0 0 auto; border:none; background:none; padding:15px 20px;">
+                        <i class="fas fa-history"></i> Historial
+                    </button>
+                    <button class="auth-tab" onclick="switchTab('responses', this)" style="flex:0 0 auto; border:none; background:none; padding:15px 20px;">
+                        <i class="fas fa-comments"></i> Respuestas
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB: General -->
+            <div id="general" class="auth-tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="flex-between">
+                            <h3 style="margin:0;">Información General</h3>
+                            <span id="badgeEstado"></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-2">
+                            <div>
+                                <div style="margin-bottom:25px;">
+                                    <label style="color:var(--gray-500); font-size:0.875rem; text-transform:uppercase; font-weight:600;">ID</label>
+                                    <p style="margin:0; font-size:1.5rem; font-weight:700; color:var(--primary);" id="campoId">--</p>
+                                </div>
+                                <div style="margin-bottom:25px;">
+                                    <label style="color:var(--gray-500); font-size:0.875rem; text-transform:uppercase; font-weight:600;">Tipo</label>
+                                    <p style="margin:0; font-size:1.125rem; font-weight:600;" id="campoTipo">--</p>
+                                </div>
+                                <div style="margin-bottom:25px;">
+                                    <label style="color:var(--gray-500); font-size:0.875rem; text-transform:uppercase; font-weight:600;">Solicitante</label>
+                                    <p style="margin:0; font-size:1.125rem; font-weight:600;" id="campoSolicitante">--</p>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="margin-bottom:25px;">
+                                    <label style="color:var(--gray-500); font-size:0.875rem; text-transform:uppercase; font-weight:600;">Estado</label>
+                                    <p style="margin:0;" id="campoEstado">--</p>
+                                </div>
+                                <div style="margin-bottom:25px;">
+                                    <label style="color:var(--gray-500); font-size:0.875rem; text-transform:uppercase; font-weight:600;">Fecha de Creación</label>
+                                    <p style="margin:0; font-size:1.125rem; font-weight:600;" id="campoFecha">--</p>
+                                </div>
+                                <div style="margin-bottom:25px; display:none;" id="contenedorResponsable">
+                                    <label style="color:var(--gray-500); font-size:0.875rem; text-transform:uppercase; font-weight:600;">Responsable</label>
+                                    <p style="margin:0; font-size:1.125rem; font-weight:600;" id="campoResponsable">--</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top:30px; padding-top:30px; border-top:1px solid var(--gray-200);">
+                            <h4 style="margin-bottom:10px;">Asunto</h4>
+                            <p style="color:var(--gray-800); font-weight:600; margin-bottom:0;" id="petAsunto">--</p>
+                        </div>
+                        <div style="margin-top:30px; padding-top:30px; border-top:1px solid var(--gray-200);">
+                            <h4 style="margin-bottom:15px;">Descripción</h4>
+                            <p style="color:var(--gray-700); line-height:1.8;" id="campoDescripcion">--</p>
+                        </div>
+
+                        <div style="margin-top:30px;">
+                            <h4 style="margin-bottom:15px;">Ubicación del Hecho</h4>
+                            <p style="color:var(--gray-700);" id="campoUbicacion">No especificada</p>
+                        </div>
+
+                        <div style="margin-top:30px;">
+                            <h4 style="margin-bottom:15px;">Fecha del Hecho</h4>
+                            <p style="color:var(--gray-700);" id="campoFechaHecho">No especificada</p>
+                        </div>
+
+                        <div style="margin-top:30px;">
+                            <h4 style="margin-bottom:15px;">Persona o Servidor Público Involucrado</h4>
+                            <p style="color:var(--gray-700);" id="campoPersona">No especificado</p>
+                        </div>
+
+                        <div style="margin-top:30px;">
+                            <h4 style="margin-bottom:15px;">Información de Contacto</h4>
+                            <div class="grid grid-2">
+                                <div>
+                                    <p style="color:var(--gray-500); font-size:0.875rem; margin-bottom:5px;">Nombre</p>
+                                    <p style="margin:0; font-weight:600;" id="campoContactoNombre">--</p>
+                                </div>
+                                <div>
+                                    <p style="color:var(--gray-500); font-size:0.875rem; margin-bottom:5px;">Email</p>
+                                    <p style="margin:0; font-weight:600;" id="campoContactoEmail">--</p>
+                                </div>
+                                <div>
+                                    <p style="color:var(--gray-500); font-size:0.875rem; margin-bottom:5px;">Teléfono</p>
+                                    <p style="margin:0; font-weight:600;" id="campoContactoTelefono">--</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Historial -->
+            <div id="timeline" class="auth-tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="margin:0;">Historial de Cambios</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="timelineContenido">
+                            <p style="color:var(--gray-500);">Cargando historial...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Respuestas -->
+            <div id="responses" class="auth-tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="margin:0;">Respuestas</h3>
+                    </div>
+                    <div class="card-body" id="respuestasContenido">
+                        <p style="color:var(--gray-500);">Cargando respuestas...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidencias del Residente -->
+            <div class="card" style="margin-top:30px;">
+                <div class="card-header">
+                    <h3 style="margin:0;">📎 Evidencias del Solicitante</h3>
+                </div>
+                <div class="card-body">
+                    <div id="evidenciasResidente"><p style="color:var(--gray-500);">Cargando...</p></div>
+                </div>
+            </div>
+
+            <!-- Evidencias del Administrador -->
+            <div class="card" style="margin-top:20px;">
+                <div class="card-header">
+                    <h3 style="margin:0;">📎 Evidencias de la JAC</h3>
+                </div>
+                <div class="card-body">
+                    <div id="evidenciasAdmin"><p style="color:var(--gray-500);">Cargando...</p></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <input type="file" id="inputEvidenciaAdmin" style="display:none;" accept="image/*,.pdf">
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ver-peticion.js"></script>
+</body>
+</html>
