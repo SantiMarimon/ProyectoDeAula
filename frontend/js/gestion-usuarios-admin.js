@@ -89,15 +89,17 @@ async function cambiarRol(id, rolActual) {
     }
 }
 
-async function suspenderUsuario(id, estaActivo) {
-    var accion = estaActivo ? 'activar' : 'suspender';
+async function suspenderUsuario(id, esSuspendido) {
+    var accion = esSuspendido ? 'activar' : 'suspender';
     if (!confirm('¿Deseas ' + accion + ' este usuario?')) return;
     try {
+        // Si está suspendido (activo=false) → activar (activo=true) y viceversa
+        var nuevoEstado = !esSuspendido;
         await apiFetch('/api/miembros/' + id + '/suspender', {
             method: 'PUT',
-            body: JSON.stringify({ activo: estaActivo })
+            body: JSON.stringify({ activo: nuevoEstado })
         });
-        showMsg('alertBox', 'Usuario ' + (estaActivo ? 'activado' : 'suspendido') + ' correctamente.', 'success');
+        showMsg('alertBox', 'Usuario ' + (nuevoEstado ? 'activado' : 'suspendido') + ' correctamente.', 'success');
         cargarUsuarios();
     } catch (err) {
         showMsg('alertBox', err.message || 'Error al cambiar el estado del usuario.', 'danger');
