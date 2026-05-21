@@ -8,6 +8,7 @@ import com.pqrs.system_pqrs.dto.RegistroRequest;
 import com.pqrs.system_pqrs.repository.MiembroRepository;
 import com.pqrs.system_pqrs.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,11 @@ public class AuthService {
         Miembro miembro = miembroRepository.findByCorreoMiembro(req.getCorreo())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        // Verificar que el usuario no esté suspendido
+        if (!miembro.isActivo()) {
+            throw new IllegalArgumentException("Tu cuenta ha sido suspendida. Contacta al administrador.");
+        }
+
         String token = jwtService.generateToken(miembro.getCorreoMiembro(), miembro.getRol().name());
         return new AuthResponse(token, miembro.getCorreoMiembro(),
                 miembro.getRol().name(), miembro.getNombreCompleto(), miembro.getId());
@@ -52,6 +58,7 @@ public class AuthService {
         miembro.setCorreoMiembro(req.getCorreoMiembro());
         miembro.setPasswordMiembro(passwordEncoder.encode(req.getPassword()));
         miembro.setRol(RolNombre.RESIDENTE);
+        miembro.setActivo(true); // siempre activo al registrarse
 
         Miembro saved = miembroRepository.save(miembro);
         String token = jwtService.generateToken(saved.getCorreoMiembro(), saved.getRol().name());
